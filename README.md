@@ -24,3 +24,13 @@ ruby main.rb <n>
 # test
 bash check_output.sh
 ```
+
+## q3
+
+```bash
+cd q3
+# run
+ruby main.rb <n> <m> <t>
+# test
+bash check_output.sh
+```
