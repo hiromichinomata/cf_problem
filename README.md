@@ -14,3 +14,13 @@ ruby main.rb
 # test
 bash check_output.sh
 ```
+
+## q2
+
+```bash
+cd q2
+# run
+ruby main.rb <n>
+# test
+bash check_output.sh
+```
