@@ -9,6 +9,7 @@ csv_data = CSV.read("input.csv")
 csv_data.sort!
 
 # high_load time
+high_load_points = {}
 high_load_reports = []
 
 address_date_to_response = {}
@@ -44,11 +45,40 @@ server_logs.each do |server_address, log_arr|
     response_list = date_list.map{ |date| address_date_to_response[server_address][date].to_i }
     (0...(date_list.size-m+1)).each do |i|
       if response_list[i...i+m].sum/m.to_f >= t
-        from_sec = DateTime.parse(date_list[i]).to_time.to_i
-        to_sec = DateTime.parse(date_list[i+m-1]).to_time.to_i
-        high_load_reports.append([server_address, to_sec - from_sec])
+        from_dt = DateTime.parse(date_list[i])
+        to_dt = DateTime.parse(date_list[i+m-1])
+        if high_load_points[server_address] == nil
+          high_load_points[server_address] = [[from_dt, to_dt]]
+        else
+          high_load_points[server_address].append([from_dt, to_dt])
+        end
       end
     end
+  end
+end
+
+high_load_points.each do |server_address, from_to_list|
+  i = 0
+  while i < from_to_list.size
+    from_dt_i, to_dt_i = from_to_list[i]
+
+    j = i + 1
+    while j < from_to_list.size
+      from_dt_j, to_dt_j = from_to_list[j]
+      if from_dt_j <= to_dt_i
+        to_dt_i = to_dt_j
+        i += 1
+        j += 1
+      else
+        break
+      end
+    end
+
+    to_sec = to_dt_i.to_time.to_i
+    from_sec = from_dt_i.to_time.to_i
+    high_load_reports.append([server_address, to_sec - from_sec])
+
+    i += 1
   end
 end
 
